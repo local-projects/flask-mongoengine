@@ -110,7 +110,12 @@ class QuerySetSelectMultipleField(QuerySetSelectField):
                     return
 
                 self.queryset.rewind()
-                self.data = list(self.queryset(pk__in=valuelist))
+                
+                """
+                   self.data should be ordered by valuelist order, not db ref order
+                """
+                # self.data = list(self.queryset(pk__in=valuelist))
+                self.data = [self.queryset(id=val).first() for val in valuelist]
                 if not len(self.data):
                     self.data = None
 
